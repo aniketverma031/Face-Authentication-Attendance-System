@@ -1,181 +1,159 @@
-📌 Face Authentication Attendance System
-🔍 Project Overview
+# 📌 Face Authentication Attendance System
 
-The Face Authentication Attendance System is a computer vision–based application that uses a live camera feed to register users, authenticate faces in real time, and automatically mark attendance with Punch-IN and Punch-OUT functionality.
+## 🔍 Project Overview
+The **Face Authentication Attendance System** is a computer vision–based application that uses a live camera feed to **register users, authenticate faces in real time, and automatically mark attendance** with **Punch-IN and Punch-OUT** functionality.
 
-The system is designed to be reliable, practical, and aligned with real-world biometric attendance systems, while also demonstrating a clear understanding of machine learning limitations.
+The system is designed to be **reliable, practical, and aligned with real-world biometric attendance systems**, while also demonstrating a clear understanding of **machine learning limitations**.
 
-🎯 Features
+---
 
-✅ Face Registration using live webcam
+## 🎯 Features
+- ✅ Face Registration using live webcam  
+- ✅ Real-time Face Recognition  
+- ✅ Automatic Punch-IN / Punch-OUT  
+- ✅ One IN + One OUT per user per day  
+- ✅ Works with real camera input  
+- ✅ Handles varying lighting conditions  
+- ✅ Basic spoof prevention using motion detection  
+- ✅ CSV-based attendance logging  
+- ✅ Cooldown mechanism to prevent duplicate entries  
 
-✅ Real-time Face Recognition
+---
 
-✅ Automatic Punch-IN / Punch-OUT
+## 🧠 Model & Approach Used
 
-✅ One IN + One OUT per user per day
+### Face Detection & Recognition
+- **Library:** `face-recognition` (dlib-based)
+- **Approach:** Face Embeddings + Distance Matching
 
-✅ Works with real camera input
+Each detected face is converted into a **128-dimensional embedding**.  
+Authentication is performed using **Euclidean distance**, and the **best match** is selected based on the **minimum distance**.
 
-✅ Handles varying lighting conditions
-
-✅ Basic spoof prevention using motion detection
-
-✅ CSV-based attendance logging
-
-✅ Cooldown mechanism to prevent duplicate entries
-
-🧠 Model & Approach Used
-Face Detection & Recognition
-
-Library: face-recognition (dlib-based)
-
-Approach: Face Embeddings + Distance Matching
-
-Each detected face is converted into a 128-dimensional embedding
-
-Authentication is done using Euclidean distance
-
-Best match is selected using minimum distance
-
-Recognition threshold is tuned for live webcam input
-
-Distance < 0.6 → Same person
-Distance ≥ 0.6 → Unknown
+**Recognition Threshold:**
+--Distance < 0.6 → Same person
+--Distance ≥ 0.6 → Unknown
 
 
-Why Face Embeddings?
+### Why Face Embeddings?
+- No need to train a model from scratch  
+- Industry-standard face recognition approach  
+- Robust to lighting and pose variations  
 
-No need to train a model from scratch
+---
 
-Industry-standard approach
+## 🏗️ System Architecture
 
-Robust to lighting and pose variations.
-
-
-🏗️ System Architecture:
 Webcam Input
-     ↓
+↓
 Face Detection
-     ↓
+↓
 Face Encoding (Embeddings)
-     ↓
+↓
 Best Match Selection
-     ↓
+↓
 Authentication Decision
-     ↓
+↓
 Attendance Logic (IN / OUT)
-     ↓
+↓
 CSV Storage
 
 
+---
 
-🛡️ Spoof Prevention (Basic)
+## 🛡️ Spoof Prevention (Basic)
 
 To reduce basic spoofing attempts:
+- Frame-to-frame **motion detection** is applied  
+- Static images or photos fail to generate motion  
 
-Frame-to-frame motion detection is applied
+⚠️ This is a **basic attempt** and not enterprise-grade liveness detection.
 
-Static images or photos fail to generate motion
+---
 
-This is a basic attempt, not enterprise-grade liveness detection
+## 🧾 Attendance Logic
+- First successful recognition of the day → **IN**
+- Second successful recognition of the day → **OUT**
+- Further detections on the same day → **Ignored**
+- A cooldown period prevents repeated frame-based entries
 
-🧾 Attendance Logic
-
-First successful recognition of the day → IN
-
-Second successful recognition of the day → OUT
-
-Any further detections on the same day → ignored
-
-A cooldown period prevents repeated frame-based entries
-
-
-Sample attendance.csv
-Name,Date,Time,Type
-Aniket,2026-01-28,09:45:12,IN
-Aniket,2026-01-28,17:58:40,OUT
+### Sample `attendance.csv`
+--Name,Date,Time,Type
+--Aniket,2026-01-28,09:45:12,IN
+--Aniket,2026-01-28,17:58:40,OUT
 
 
+---
 
-⚙️ Technologies Used
+## ⚙️ Technologies Used
+- **Programming Language:** Python 3.10  
+- **Computer Vision:** OpenCV  
+- **Face Recognition:** dlib, face-recognition  
+- **Data Handling:** pandas  
+- **Storage:** CSV  
+- **OS Tested On:** Windows  
 
-Programming Language: Python 3.10
+---
 
-Computer Vision: OpenCV
-
-Face Recognition: dlib, face-recognition
-
-Data Handling: pandas
-
-Storage: CSV file
-
-OS Tested On: Windows
-
-
-
-📁 Project Structure:
+## 📁 Project Structure
 face_attendance_system/
 │
-├── register.py        # Face registration
-├── recognize.py       # Face recognition & attendance
-├── spoof.py           # Spoof prevention logic
-├── attendance.csv     # Attendance records (auto-created)
+├── register.py # Face registration
+├── recognize.py # Face recognition & attendance
+├── spoof.py # Spoof prevention logic
+├── attendance.csv # Attendance records (auto-created)
 ├── faces/
-│   └── registered/    # Stored face embeddings
+│ └── registered/ # Stored face embeddings (local only)
 └── requirements.txt
 
 
+---
 
-▶️ How to Run the Project
-1️⃣ Activate virtual environment:
-    venv\Scripts\activate
+## ▶️ How to Run the Project
 
-2️⃣ Register a user (run once per user):
-    python register.py
-
-3️⃣ Start attendance system:
-    python recognize.py
-Press Q to exit the camera.
-
+### 1️⃣ Activate Virtual Environment
+--venv\Scripts\activate
+###2️⃣ Register a User (Run Once per User)
+--python register.py
+###3️⃣ Start Attendance System
+--python recognize.py
 
 
+--Press Q to exit the camera.
 
-📊 Accuracy Expectations:
-Scenario	Expected Performance
-Good lighting	95–98% accuracy
-Low lighting	85–90% accuracy
-Extreme face angles	Reduced accuracy
-Photo spoof attempts	Sometimes blocked
+###⚠️ Known Limitations
 
-⚠️ Known Limitations:
+--Not suitable for identical twins
 
-Not suitable for identical twins
-Performance degrades in very low lighting
-Basic spoof prevention (not production-grade)
-Requires clear frontal face for best results
-Dependent on webcam quality
+--Performance degrades in very low lighting
 
-🧪 Evaluation Criteria Mapping
-Criteria	Implementation
-Functional Accuracy	Face embeddings + threshold
-System Reliability	Cooldown + strict IN/OUT logic
-ML Limitations	Documented clearly
-Practical Quality	Real camera, real data logging
+--Basic spoof prevention (not production-grade)
 
-🚀 Future Improvements
-Advanced liveness detection (blink / head movement)
-Web dashboard for attendance analytics
-Working hours calculation
-Database integration
-Cloud deployment with camera gateway
+--Requires clear frontal face for best results
 
-👨‍💻 Author
+--Dependent on webcam quality
+
+
+
+###🚀 Future Improvements
+
+--Advanced liveness detection (blink / head movement)
+
+--Web dashboard for attendance analytics
+
+--Working hours calculation
+
+--Database integration
+
+--Cloud sync via edge device
+
+###👨‍💻 Author
 
 Aniket Verma
 AI / Machine Learning 
 
-🏁 Conclusion
 
-This project demonstrates a practical application of computer vision and machine learning, focusing on robust system design rather than theoretical perfection.
-It reflects real-world constraints, ethical considerations, and engineering trade-offs expected at the internship level.
+###🏁 Conclusion
+
+--This project demonstrates a practical application of computer vision and machine learning, focusing on robust system design rather than theoretical perfection.
+
+--It reflects real-world constraints, ethical considerations, and engineering trade-offs expected at the internship level.
