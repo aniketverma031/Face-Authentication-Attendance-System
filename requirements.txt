@@ -1,0 +1,7 @@
+python==3.10
+numpy==1.26.4
+opencv-python==4.8.0.76
+pillow==9.5.0
+pandas==2.0.3
+face-recognition
+dlib
