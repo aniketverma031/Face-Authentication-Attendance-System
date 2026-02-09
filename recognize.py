@@ -7,12 +7,10 @@ import time
 from datetime import datetime
 from spoof import motion_detected
 
-# ================= CONFIG =================
 DATASET_PATH = "faces/registered"
 ATTENDANCE_FILE = "attendance.csv"
 THRESHOLD = 0.6          # Face match threshold
 COOLDOWN_SECONDS = 10    # Prevent repeated writes
-# =========================================
 
 last_punch_time = {}
 
@@ -129,3 +127,4 @@ while True:
 
 video.release()
 cv2.destroyAllWindows()
+
